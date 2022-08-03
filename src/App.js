@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useRef } from "react";
+import TodoInsert from "./components/TodoInsert";
+import TodoTemplate from "./components/TodoTemplate";
 
 function App() {
+  const [todos, setTodos] = useState([]);
+  const onInsert = (text) => {
+    //text를 받음
+    const todo = {
+      id: nextId.current,
+      text: text, //text
+      checked: false,
+    };
+    setTodos((todos) => todos.concat(todo)); //초기배열에 객체 넣어줌 -> 추가 반복
+    nextId.current++;
+  };
+  const nextId = useRef(1); //추가할 때 id가 1부터 시작
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <TodoTemplate>
+      <TodoInsert onInsert={onInsert} />
+      <button
+        onClick={() => {
+          console.log(todos);
+        }}
+      >
+        show todos
+      </button>
+    </TodoTemplate>
   );
 }
 
