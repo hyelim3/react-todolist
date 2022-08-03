@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import TodoInsert from "./components/TodoInsert";
+import TodoList from "./components/TodoList";
 import TodoTemplate from "./components/TodoTemplate";
 
 function App() {
@@ -18,13 +19,7 @@ function App() {
   return (
     <TodoTemplate>
       <TodoInsert onInsert={onInsert} />
-      <button
-        onClick={() => {
-          console.log(todos);
-        }}
-      >
-        show todos
-      </button>
+      <TodoList todos={todos} />
     </TodoTemplate>
   );
 }
