@@ -16,10 +16,20 @@ function App() {
     nextId.current++;
   };
   const nextId = useRef(1); //추가할 때 id가 1부터 시작
+
+  const onToggle = (id) => {
+    //아이디가 일치하는 id만 체크상태 바꾸기
+    setTodos((todos) =>
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, checked: !todo.checked } : todo
+      )
+    );
+  };
+
   return (
     <TodoTemplate>
       <TodoInsert onInsert={onInsert} />
-      <TodoList todos={todos} />
+      <TodoList todos={todos} onToggle={onToggle} />
     </TodoTemplate>
   );
 }
