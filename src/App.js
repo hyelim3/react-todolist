@@ -1,24 +1,34 @@
 import React, { useState, useRef } from "react";
+import TodoEdit from "./components/TodoEdit";
 import TodoInsert from "./components/TodoInsert";
 import TodoList from "./components/TodoList";
 import TodoTemplate from "./components/TodoTemplate";
 
 function App() {
   const [todos, setTodos] = useState([]);
+  const [insertToggle, setInsertToggle] = useState(false); //처음은 안나와야하니깐 false
+  const nextId = useRef(1); //추가할 때 id가 1부터 시작
+
+  //삽입
   const onInsert = (text) => {
     //text를 받음
-
     const todo = {
       id: nextId.current,
       text: text, //text
       checked: false,
     };
 
-    setTodos((todos) => todos.concat(todo)); //초기배열에 객체 넣어줌 -> 추가 반복
+    setTodos((todos) => todos.concat(todo)); //초기배열에 객체 넣어줌 -> 새로 추가
+    // -> 추가된 배열로 반환
     nextId.current++;
   };
-  const nextId = useRef(1); //추가할 때 id가 1부터 시작
 
+  //수정
+  const onInsertToggle = () => {
+    setInsertToggle((prev) => !prev); //이전 상태의 반전 - 버튼을 누른다면
+  };
+
+  //삭제
   const onRemove = (id) => {
     // 해당 조건이 적용되는 것만 남긴다 todo의 id값이 다르면 남아있는다.
     setTodos((todos) => todos.filter((todo) => todo.id !== id)); // 같으면 삭제
@@ -40,7 +50,14 @@ function App() {
   return (
     <TodoTemplate>
       <TodoInsert onInsert={onInsert} />
-      <TodoList todos={todos} onRemove={onRemove} onToggle={onToggle} />
+      <TodoList
+        todos={todos}
+        onRemove={onRemove}
+        onToggle={onToggle}
+        onInsertToggle={onInsertToggle} //항목
+      />
+      {insertToggle && <TodoEdit onInsertToggle={onInsertToggle} />}
+      {/* 둘다 참일 때만 참, 참일 때는 보여주고 거짓일 때 안띄어줌 */}
     </TodoTemplate>
   );
 }
