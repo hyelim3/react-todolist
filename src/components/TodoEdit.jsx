@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "../styles/TodoEdit.scss";
 
-const TodoEdit = ({ onInsertToggle, selectedTodo }) => {
+const TodoEdit = ({ selectedTodo, onUpdate }) => {
   const [value, setValue] = useState("");
   const onChange = (e) => {
     setValue(e.target.value);
   };
   const onSubmit = (e) => {
     e.preventDefault();
-    onInsertToggle();
+    onUpdate(selectedTodo.id, value);
+    setValue(""); //제출했으니 초기화
   };
   useEffect(() => {
     setValue(selectedTodo.text); //Value값을 text로 바꾸겠다

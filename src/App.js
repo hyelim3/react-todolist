@@ -23,7 +23,7 @@ function App() {
     nextId.current++;
   };
 
-  //수정 클릭했을 떄 값을 가져오고 값을 수정하기에 넣어주는 것까지 2부
+  //수정 클릭했을 때 값을 가져오고 값을 수정하기에 넣어주는 것까지 2부
   const onInsertToggle = () => {
     setInsertToggle((prev) => !prev);
   };
@@ -41,6 +41,14 @@ function App() {
     );
   };
 
+  const onUpdate = (id, text) => {
+    setTodos(
+      (
+        todos //돌다가 id가 같으면 나머지는 남기고 text만 바뀌고 나머지는 남긴다
+      ) => todos.map((todo) => (todo.id === id ? { ...todo, text } : todo))
+    );
+    onInsertToggle();
+  };
   return (
     <TodoTemplate>
       <TodoInsert onInsert={onInsert} />
@@ -52,7 +60,11 @@ function App() {
         setSelectedTodo={setSelectedTodo}
       />
       {insertToggle && (
-        <TodoEdit onInsertToggle={onInsertToggle} selectedTodo={selectedTodo} />
+        <TodoEdit
+          onInsertToggle={onInsertToggle}
+          selectedTodo={selectedTodo}
+          onUpdate={onUpdate}
+        />
       )}
     </TodoTemplate>
   );
