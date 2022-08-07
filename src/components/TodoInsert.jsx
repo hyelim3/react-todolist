@@ -8,9 +8,9 @@ const TodoInsert = ({ onInsert }) => {
     setValue(e.target.value);
   };
   const onSubmit = (e) => {
-    e.preventDefault(); //새로고침 X
-    setValue(""); //초기화
-    onInsert(value); //추가해주는 작업
+    e.preventDefault();
+    setValue("");
+    onInsert(value);
   };
 
   return (
