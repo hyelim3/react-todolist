@@ -11,7 +11,7 @@ function App() {
   const [selectedTodo, setSelectedTodo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const nextId = useRef(1);
+  const nextId = useRef(4);
 
   //삽입
   const onInsert = (text) => {
@@ -37,15 +37,11 @@ function App() {
   };
 
   const onToggle = async (id) => {
-    try {
-      const data = await axios({
-        url: `http://localhost:4000/todos/check/${id}`,
-        method: "PATCH",
-      });
-      setTodos(data.data);
-    } catch (e) {
-      setError(e);
-    }
+    const data = await axios({
+      url: `http://localhost:4000/todos/check/${id}`,
+      method: "PATCH",
+    });
+    setTodos(data.data);
   };
 
   const onUpdate = (id, text) => {
