@@ -1,13 +1,16 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import TodoEdit from "./components/TodoEdit";
 import TodoInsert from "./components/TodoInsert";
 import TodoList from "./components/TodoList";
 import TodoTemplate from "./components/TodoTemplate";
+import axios from "axios";
 
 function App() {
   const [todos, setTodos] = useState([]);
   const [insertToggle, setInsertToggle] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const nextId = useRef(1);
 
   //삽입
@@ -49,6 +52,33 @@ function App() {
     );
     onInsertToggle();
   };
+
+  useEffect(() => {
+    //api 최초 한번만 실행, 프론트에서 데이터 받기
+    const getData = async () => {
+      try {
+        const data = await axios({
+          url: "http://localhost:4000/todos",
+          method: "GET",
+        });
+        console.log(data.data);
+        setTodos(data.data); //할일 안에 넣어야함 불러와야함
+        setIsLoading(false);
+      } catch (e) {
+        setError(e);
+      }
+    };
+    getData();
+  }, []);
+
+  if (error) {
+    return <>에러: {error.message}</>;
+  }
+
+  if (isLoading) {
+    return <>Loading...</>;
+  }
+
   return (
     <TodoTemplate>
       <TodoInsert onInsert={onInsert} />

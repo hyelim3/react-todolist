@@ -11,6 +11,8 @@ const TodoEdit = ({ selectedTodo, onUpdate }) => {
     onUpdate(selectedTodo.id, value);
     setValue(""); //제출했으니 초기화
   };
+
+  //수정
   useEffect(() => {
     setValue(selectedTodo.text); //Value값을 text로 바꾸겠다
   }, [selectedTodo]); //selectedTodo 바뀐다면
