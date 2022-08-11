@@ -4,6 +4,7 @@ import TodoInsert from "./components/TodoInsert";
 import TodoList from "./components/TodoList";
 import TodoTemplate from "./components/TodoTemplate";
 import axios from "axios";
+import { MdPool } from "react-icons/md";
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -14,16 +15,27 @@ function App() {
   const nextId = useRef(4);
 
   //삽입
-  const onInsert = (text) => {
-    const todo = {
-      id: nextId.current,
-      text: text,
-      checked: false,
-    };
+  const onInsert = async (text) => {
+    // const todo = {
+    //   id: nextId.current,
+    //   text: text,
+    //   checked: false,
+    // };
 
-    setTodos((todos) => todos.concat(todo));
+    // setTodos((todos) => todos.concat(todo));
 
-    nextId.current++;
+    // nextId.current++;
+    try {
+      const data = await axios({
+        url: `http://localhost:4000/todos`,
+        method: "POST",
+        data: { text },
+      });
+
+      setTodos(data.data);
+    } catch (e) {
+      setError(e);
+    }
   };
 
   //수정 클릭했을 때 값을 가져오고 값을 수정하기에 넣어주는 것까지 2부
@@ -32,8 +44,22 @@ function App() {
   };
 
   //삭제
-  const onRemove = (id) => {
-    setTodos((todos) => todos.filter((todo) => todo.id !== id));
+  const onRemove = async (id) => {
+    //setTodos((todos) => todos.filter((todo) => todo.id !== id));
+    try {
+      await axios({
+        url: `http://localhost:4000/todos/${id}`,
+        method: "DELETE",
+      });
+      const data = await axios({
+        url: `http://localhost:4000/todos`,
+        method: "GET",
+      });
+      console.log(data);
+      setTodos(data.data);
+    } catch (e) {
+      setError(e);
+    }
   };
 
   const onToggle = async (id) => {
@@ -41,15 +67,29 @@ function App() {
       url: `http://localhost:4000/todos/check/${id}`,
       method: "PATCH",
     });
+    console.log("updatedData", data.data);
     setTodos(data.data);
   };
 
-  const onUpdate = (id, text) => {
-    setTodos(
-      (
-        todos //돌다가 id가 같으면 나머지는 남기고 text만 바뀌고 나머지는 남긴다
-      ) => todos.map((todo) => (todo.id === id ? { ...todo, text } : todo))
-    );
+  const onUpdate = async (id, text) => {
+    // setTodos((todos) =>
+    //   todos.map((todo) => (todo.id === id ? { ...todo, text } : todo))
+    // );
+    console.log(id);
+    console.log(text);
+    try {
+      const data = await axios({
+        url: `http://localhost:4000/todos/${id}`,
+        method: "PATCH",
+        data: {
+          text,
+          perform_date: "2022-08-09 11:11:11",
+        },
+      });
+      setTodos(data.data);
+    } catch (e) {
+      setError(e);
+    }
     onInsertToggle();
   };
 
@@ -61,7 +101,7 @@ function App() {
           url: "http://localhost:4000/todos",
           method: "GET",
         });
-        console.log(data.data);
+        console.log("data", data.data);
         setTodos(data.data); //할일 안에 넣어야함 불러와야함
         setIsLoading(false);
       } catch (e) {
@@ -96,6 +136,13 @@ function App() {
           onUpdate={onUpdate}
         />
       )}
+      <button
+        onClick={() => {
+          console.log(todos);
+        }}
+      >
+        check
+      </button>
     </TodoTemplate>
   );
 }

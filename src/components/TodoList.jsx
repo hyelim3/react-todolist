@@ -25,3 +25,13 @@ const TodoList = ({
 };
 
 export default TodoList;
+
+function App() {
+  return (
+    <div>
+      {null}
+      {false}
+      {true}
+    </div>
+  );
+}
